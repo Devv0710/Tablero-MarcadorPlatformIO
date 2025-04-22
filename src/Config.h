@@ -28,6 +28,8 @@
 #define MAX_PERIODO 9
 #define BRIGHTNESS 50
 
+void setupLeds();
+
 // Mapeo de segmentos para display de 7 segmentos
 const uint8_t SEGMENTOS_LEDS[7][5] = {
   { 5, 6, 7, 8, 9 },       // A

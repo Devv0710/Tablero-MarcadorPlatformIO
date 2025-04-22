@@ -19,29 +19,15 @@ long transcurrido = 0;
 
 
 
-void mostrarNumero(uint8_t num, uint8_t digitPosition, CRGB* display);
-void mostrarTiempo(uint8_t minutos, uint8_t segundos, CRGB* display);
-void cronometro(uint8_t& minutos, uint8_t& segundos, CRGB* display);
-void mostrarPuntaje(uint8_t puntaje, CRGB* display);
+
 void procesarComando(String comando);
 bool botonPuntajePlusEstadoAnterior = false;
 bool botonPuntajeMinusEstadoAnterior = false;
 
 void setup() {
   setupRemoteXY();
-
   Serial.begin(115200);
-
-  FastLED.addLeds<WS2813, PIN_CRONOMETRO, GRB>(cronometro_display, NUM_LEDS_CRONOMETRO);
-  FastLED.addLeds<WS2813, PIN_PUNTAJE_LOCAL, GRB>(puntaje_local_display, NUM_LEDS_PUNTAJE);
-  FastLED.addLeds<WS2813, PIN_PUNTAJE_VISITANTE, GRB>(puntaje_visitante_display, NUM_LEDS_PUNTAJE);
-  FastLED.addLeds<WS2813, PIN_FALTAS_LOCAL, GRB>(faltas_local_display, NUM_LEDS_CONTADORES);
-  FastLED.addLeds<WS2813, PIN_FALTAS_VISITANTE, GRB>(faltas_visitante_display, NUM_LEDS_CONTADORES);
-  FastLED.addLeds<WS2813, PIN_PERIODO, GRB>(periodo_display, NUM_LEDS_CONTADORES);
-  FastLED.setBrightness(50);
-
-  FastLED.clear();
-  FastLED.show();
+  setupLeds();
 
 //  Activar cronómetro automáticamente
   cronometroActivo = true;

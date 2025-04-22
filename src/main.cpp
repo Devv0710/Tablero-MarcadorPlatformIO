@@ -1,4 +1,6 @@
 #include "Config.h"
+#include "Display.h"
+#include "RemoteXY_Config.h"
 
 CRGB puntaje_local_display[NUM_LEDS_PUNTAJE];
 CRGB puntaje_visitante_display[NUM_LEDS_PUNTAJE];
@@ -8,44 +10,23 @@ CRGB faltas_visitante_display[NUM_LEDS_CONTADORES];
 CRGB periodo_display[NUM_LEDS_CONTADORES];
 
 static uint8_t segundos = 0, minutos = 0;
-static uint8_t minutos_anteriores = 0, segundos_anteriores = 0;
+
 static uint8_t puntaje_local = 0, puntaje_visitante = 0;
 static uint8_t faltas_local = 0, faltas_visitante = 0, periodo = 1;
 static bool cronometroActivo = false;
 long inicioCronometro = 0;
 long transcurrido = 0;
 
-byte numeros[10] = {
-  B00111111,  // 0
-  B00000110,  // 1
-  B01011011,  // 2
-  B01001111,  // 3
-  B01100110,  // 4
-  B01101101,  // 5
-  B01111101,  // 6
-  B00000111,  // 7
-  B01111111,  // 8
-  B01101111   // 9
-};
 
 
-const uint8_t segmentos_leds[7][5] = {
-  { 5, 6, 7, 8, 9 },       // A
-  { 0, 1, 2, 3, 4 },       // B
-  { 20, 21, 22, 23, 24 },  // C
-  { 25, 26, 27, 28, 29 },  // D
-  { 30, 31, 32, 33, 34 },  // E
-  { 10, 11, 12, 13, 14 },  // F
-  { 15, 16, 17, 18, 19 }   // G
-};
-
-void mostrarNumero(uint8_t num, uint8_t offset, CRGB* display);
+void mostrarNumero(uint8_t num, uint8_t digitPosition, CRGB* display);
 void mostrarTiempo(uint8_t minutos, uint8_t segundos, CRGB* display);
 void cronometro(uint8_t& minutos, uint8_t& segundos, CRGB* display);
 void mostrarPuntaje(uint8_t puntaje, CRGB* display);
 void procesarComando(String comando);
 bool botonPuntajePlusEstadoAnterior = false;
 bool botonPuntajeMinusEstadoAnterior = false;
+
 void setup() {
   setupRemoteXY();
 
@@ -133,47 +114,9 @@ void cronometro(uint8_t& minutos, uint8_t& segundos, CRGB* display) {
   }
 }
 
-void mostrarTiempo(uint8_t minutos, uint8_t segundos, CRGB* display) {
-  Serial.print(minutos, DEC);
-  Serial.print(":");
-  Serial.println(segundos, DEC);
-  if (minutos != minutos_anteriores) {
-    mostrarNumero(minutos / 10, 3 * LEDS_POR_DIGITO, display);
-    mostrarNumero(minutos % 10, 2 * LEDS_POR_DIGITO, display);
-    minutos_anteriores = minutos;
-    //Serial.println(minutos);
-  }
-  if (segundos != segundos_anteriores) {
-    mostrarNumero(segundos / 10, 1 * LEDS_POR_DIGITO, display);
-    mostrarNumero(segundos % 10, 0 * LEDS_POR_DIGITO, display);
-    segundos_anteriores = segundos;
-    //Serial.println(segundos);
-  }
-}
 
-void mostrarNumero(uint8_t num, uint8_t offset, CRGB* display) {
-  byte segmentos = numeros[num];
-  for (uint8_t seg = 0; seg < 7; seg++) {
-    bool encender = bitRead(segmentos, seg);
-    for (uint8_t i = 0; i < 5; i++) {
-      display[segmentos_leds[seg][i] + offset] = encender ? CRGB(255, 0, 0) : CRGB::Black;
-    }
-  }
-  FastLED.show();
-}
 
-void mostrarPuntaje(uint8_t puntaje, CRGB* display) {
-  if (puntaje < 10) {
-    mostrarNumero(puntaje % 10, 0 * LEDS_POR_DIGITO, display);
-  } else if (puntaje < 100) {
-    mostrarNumero((puntaje / 10) % 10, 1 * LEDS_POR_DIGITO, display);
-    mostrarNumero(puntaje % 10, 0 * LEDS_POR_DIGITO, display);
-  } else {
-    mostrarNumero((puntaje / 100) % 10, 2 * LEDS_POR_DIGITO, display);
-    mostrarNumero((puntaje / 10) % 10, 1 * LEDS_POR_DIGITO, display);
-    mostrarNumero(puntaje % 10, 0 * LEDS_POR_DIGITO, display);
-  }
-}
+
 
 void procesarComando(String comando) {
   if (comando == "IC") {

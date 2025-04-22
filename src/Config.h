@@ -4,18 +4,23 @@
 #include <FastLED.h>
 
 // Configuración de pines
-#define PIN_CRONOMETRO 2
-#define PIN_PUNTAJE_LOCAL 3
-#define PIN_PUNTAJE_VISITANTE 4
-#define PIN_FALTAS_LOCAL 5
-#define PIN_FALTAS_VISITANTE 6
-#define PIN_PERIODO 7
+#define PIN_CRONOMETRO 5
+#define PIN_PUNTAJE_LOCAL 13
+#define PIN_PUNTAJE_VISITANTE 14
+#define PIN_FALTAS_LOCAL 18
+#define PIN_FALTAS_VISITANTE 19
+#define PIN_PERIODO 21
 
 // Configuración de LEDs
-#define NUM_LEDS_CRONOMETRO 150
-#define NUM_LEDS_PUNTAJE 105
-#define NUM_LEDS_CONTADORES 35
-#define LEDS_POR_DIGITO 35
+#define NUM_DIGITOS_CRONOMETRO 4  // 2 dígitos para minutos y 2 para segundos
+#define NUM_DIGITOS_PUNTAJE 3 // 3 dígitos para puntaje
+#define NUM_DIGITOS_CONTADORES 1  // 1 dígito para faltas y periodo
+
+#define LEDS_POR_DIGITO 35  // LEDs por cada dígito
+#define NUM_LEDS_CRONOMETRO (NUM_DIGITOS_CRONOMETRO * LEDS_POR_DIGITO)
+#define NUM_LEDS_PUNTAJE (NUM_DIGITOS_PUNTAJE * LEDS_POR_DIGITO)
+#define NUM_LEDS_CONTADORES (NUM_DIGITOS_CONTADORES * LEDS_POR_DIGITO)
+
 
 // Límites y configuraciones
 #define MAX_PUNTAJE 999
